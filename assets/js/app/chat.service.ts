@@ -5,7 +5,7 @@ import {CHATS} from './mock-chats';
 export class ChatService {
     getChats() {
         return new Promise < Hero[] > (resolve =>
-            setTimeout(() => resolve(CHATS), 2000) // 2 seconds
+            setTimeout(() => resolve(CHATS))
         );
     }
 }
