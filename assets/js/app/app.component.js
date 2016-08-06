@@ -1,4 +1,4 @@
-System.register("app.component", ['@angular/core'], function(exports_1, context_1) {
+System.register("app.component", ['@angular/core', './chat-detail.component', './chat.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -7,37 +7,49 @@ System.register("app.component", ['@angular/core'], function(exports_1, context_
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var core_1;
-    var CHATS, AppComponent;
+    var __param = (this && this.__param) || function (paramIndex, decorator) {
+        return function (target, key) { decorator(target, key, paramIndex); }
+    };
+    var core_1, chat_detail_component_1, chat_service_1;
+    var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (chat_detail_component_1_1) {
+                chat_detail_component_1 = chat_detail_component_1_1;
+            },
+            function (chat_service_1_1) {
+                chat_service_1 = chat_service_1_1;
             }],
         execute: function() {
-            CHATS = [
-                { id: 11, name: 'Mr. Nice' },
-                { id: 12, name: 'Narco' },
-                { id: 13, name: 'Bombasto' },
-                { id: 14, name: 'Celeritas' },
-                { id: 15, name: 'Magneta' },
-                { id: 16, name: 'RubberMan' },
-                { id: 17, name: 'Dynama' },
-                { id: 18, name: 'Dr IQ' },
-                { id: 19, name: 'Magma' },
-                { id: 20, name: 'Tornado' }
-            ];
             AppComponent = (function () {
-                function AppComponent() {
+                function AppComponent(chatService, changeDetectorRef) {
+                    this.chatService = chatService;
                     this.title = 'Chats';
-                    this.chats = CHATS;
+                    this.changeDetectorRef = changeDetectorRef;
                 }
+                AppComponent.prototype.ngOnInit = function () {
+                    this.getChats();
+                };
                 AppComponent.prototype.onSelect = function (chat) { this.selectedChat = chat; };
+                AppComponent.prototype.getChats = function () {
+                    this.chatService.getChats().then(function (chats) {
+                        this.chats = chats;
+                        // for some reason Angular 2 RC4 does not detect the change...
+                        this.changeDetectorRef.detectChanges();
+                    }.bind(this));
+                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n    <h2>Chats</h2>\n    {{chats}}\n    <ul>\n    </ul>\n    <chat-detail [hero]=\"selectedChat\"></chat-detail>\n    "
-                    })
+                        template: "\n    <h2>Chats</h2>\n    <ul>\n      <li *ngFor=\"let chat of chats\" (click)=\"onSelect(chat)\">\n        <span class=\"badge\">{{chat.id}}</span> {{chat.name}}\n      </li>\n    </ul>\n    <chat-detail [chat]=\"selectedChat\"></chat-detail>\n    ",
+                        directives: [chat_detail_component_1.ChatDetailComponent],
+                        providers: [chat_service_1.ChatService]
+                    }),
+                    __param(0, core_1.Inject(chat_service_1.ChatService)),
+                    __param(1, core_1.Inject(core_1.ChangeDetectorRef))
                 ], AppComponent);
                 return AppComponent;
             }());
