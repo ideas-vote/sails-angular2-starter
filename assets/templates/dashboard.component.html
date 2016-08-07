@@ -1,0 +1,8 @@
+<h3>Top Chats</h3>
+<div class="grid grid-pad">
+  <div *ngFor="let chat of chats" (click)="gotoDetail(chat)" class="col-1-4">
+    <div class="module hero">
+      <h4>{{chat.name}}</h4>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
-System.register("app.routes", ['@angular/router', './chats.component', './dashboard.component'], function(exports_1, context_1) {
+System.register("app.routes", ['@angular/router', './chats.component', './dashboard.component', './chat-detail.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var router_1, chats_component_1, dashboard_component_1;
+    var router_1, chats_component_1, dashboard_component_1, chat_detail_component_1;
     var routes, appRouterProviders;
     return {
         setters:[
@@ -13,6 +13,9 @@ System.register("app.routes", ['@angular/router', './chats.component', './dashbo
             },
             function (dashboard_component_1_1) {
                 dashboard_component_1 = dashboard_component_1_1;
+            },
+            function (chat_detail_component_1_1) {
+                chat_detail_component_1 = chat_detail_component_1_1;
             }],
         execute: function() {
             routes = [
@@ -28,6 +31,10 @@ System.register("app.routes", ['@angular/router', './chats.component', './dashbo
                 {
                     path: 'dashboard',
                     component: dashboard_component_1.DashboardComponent
+                },
+                {
+                    path: 'detail/:id',
+                    component: chat_detail_component_1.ChatDetailComponent
                 },
             ];
             exports_1("appRouterProviders", appRouterProviders = [

@@ -1,38 +1,28 @@
 import {Component, OnInit, Inject, ChangeDetectorRef} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Chat } from './chat';
-import { ChatDetailComponent } from './chat-detail.component';
 import { ChatService } from './chat.service';
 
 
 @Component({
     selector: 'my-chats',
-    template: `
-    <h2>Chats</h2>
-    <ul>
-      <li *ngFor="let chat of chats" (click)="onSelect(chat)">
-        <span class="badge">{{chat.id}}</span> {{chat.name}}
-      </li>
-    </ul>
-    <chat-detail [chat]="selectedChat"></chat-detail>
-    `,
-    directives: [ChatDetailComponent],
+    templateUrl: 'templates/chats.component.html',
 })
 
-export class ChatsComponent implements OnInit {
+export class ChatsComponent implements OnInit, OnDestroy {
   title = 'Chats';
   chats: Chat[];
   selectedChat: Chat;
   private sub: any;
+  private router: Router;
   
   constructor(@Inject(ChatService) private chatService: ChatService,
           @Inject(ChangeDetectorRef) changeDetectorRef : ChangeDetectorRef,
-          @Inject(ActivatedRoute) private route: ActivatedRoute) {
+          @Inject(ActivatedRoute) private route: ActivatedRoute,
+          @Inject(Router) router : Router) {
     this.changeDetectorRef = changeDetectorRef;
-    this.sub = this.route.params.subscribe(params => {
-      //let id = +params['id']; // (+) converts string 'id' to a number
-      this.getChats();
-    });
+    this.router = router;
+    this.getChats();
    }
   
   ngOnInit() {
@@ -52,5 +42,9 @@ export class ChatsComponent implements OnInit {
       // for some reason Angular 2 RC4 does not detect the change...
       this.changeDetectorRef.detectChanges();
     }.bind(this));
+  }
+  gotoDetail() {
+    let link = ['/detail', this.selectedChat.id];
+    this.router.navigate(link);
   }
 }

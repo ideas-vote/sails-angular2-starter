@@ -8,4 +8,9 @@ export class ChatService {
             setTimeout(() => resolve(CHATS))
         );
     }
+    
+    getChat(id: number) {
+        return this.getChats()
+             .then(chats => chats.find(chat => chat.id === id));
+    }
 }

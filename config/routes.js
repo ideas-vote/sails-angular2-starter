@@ -32,14 +32,10 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  },
-  '/chats': {
-    view: 'homepage'
-  },
-  '/dashboard': {
-    view: 'homepage'
+  "get *":{
+    view:"homepage",
+    skipAssets: true,
+    skipRegex: /^\/api\/.*$/
   }
 
   /***************************************************************************

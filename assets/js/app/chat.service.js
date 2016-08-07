@@ -26,6 +26,10 @@ System.register("chat.service", ['@angular/core', './mock-chats'], function(expo
                         return setTimeout(function () { return resolve(mock_chats_1.CHATS); });
                     });
                 };
+                ChatService.prototype.getChat = function (id) {
+                    return this.getChats()
+                        .then(function (chats) { return chats.find(function (chat) { return chat.id === id; }); });
+                };
                 ChatService = __decorate([
                     core_1.Injectable()
                 ], ChatService);

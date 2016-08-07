@@ -1,0 +1,12 @@
+<h2>Chats</h2>
+<ul>
+    <li *ngFor="let chat of chats" (click)="onSelect(chat)">
+        <span class="badge">{{chat.id}}</span> {{chat.name}}
+    </li>
+</ul>
+<div *ngIf="selectedChat">
+  <h2>
+    {{selectedChat.name | uppercase}} is my chat
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>

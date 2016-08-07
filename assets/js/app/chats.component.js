@@ -1,4 +1,4 @@
-System.register("chats.component", ['@angular/core', '@angular/router', './chat-detail.component', './chat.service'], function(exports_1, context_1) {
+System.register("chats.component", ['@angular/core', '@angular/router', './chat.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register("chats.component", ['@angular/core', '@angular/router', './chat-
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, router_1, chat_detail_component_1, chat_service_1;
+    var core_1, router_1, chat_service_1;
     var ChatsComponent;
     return {
         setters:[
@@ -20,24 +20,18 @@ System.register("chats.component", ['@angular/core', '@angular/router', './chat-
             function (router_1_1) {
                 router_1 = router_1_1;
             },
-            function (chat_detail_component_1_1) {
-                chat_detail_component_1 = chat_detail_component_1_1;
-            },
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
             }],
         execute: function() {
             ChatsComponent = (function () {
-                function ChatsComponent(chatService, changeDetectorRef, route) {
-                    var _this = this;
+                function ChatsComponent(chatService, changeDetectorRef, route, router) {
                     this.chatService = chatService;
                     this.route = route;
                     this.title = 'Chats';
                     this.changeDetectorRef = changeDetectorRef;
-                    this.sub = this.route.params.subscribe(function (params) {
-                        //let id = +params['id']; // (+) converts string 'id' to a number
-                        _this.getChats();
-                    });
+                    this.router = router;
+                    this.getChats();
                 }
                 ChatsComponent.prototype.ngOnInit = function () {
                     // not working
@@ -55,15 +49,19 @@ System.register("chats.component", ['@angular/core', '@angular/router', './chat-
                         this.changeDetectorRef.detectChanges();
                     }.bind(this));
                 };
+                ChatsComponent.prototype.gotoDetail = function () {
+                    var link = ['/detail', this.selectedChat.id];
+                    this.router.navigate(link);
+                };
                 ChatsComponent = __decorate([
                     core_1.Component({
                         selector: 'my-chats',
-                        template: "\n    <h2>Chats</h2>\n    <ul>\n      <li *ngFor=\"let chat of chats\" (click)=\"onSelect(chat)\">\n        <span class=\"badge\">{{chat.id}}</span> {{chat.name}}\n      </li>\n    </ul>\n    <chat-detail [chat]=\"selectedChat\"></chat-detail>\n    ",
-                        directives: [chat_detail_component_1.ChatDetailComponent]
+                        templateUrl: 'templates/chats.component.html'
                     }),
                     __param(0, core_1.Inject(chat_service_1.ChatService)),
                     __param(1, core_1.Inject(core_1.ChangeDetectorRef)),
-                    __param(2, core_1.Inject(router_1.ActivatedRoute))
+                    __param(2, core_1.Inject(router_1.ActivatedRoute)),
+                    __param(3, core_1.Inject(router_1.Router))
                 ], ChatsComponent);
                 return ChatsComponent;
             }());
