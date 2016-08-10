@@ -1,0 +1,10 @@
+<div id="search-component">
+  <h4>Chat Search</h4>
+  <input #searchBox id="search-box" (keyup)="search(searchBox.value)" />
+  <div>
+    <div *ngFor="let chat of chats | async"
+         (click)="gotoDetail(chat)" class="search-result" >
+      {{chat.name}}
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-System.register("chats.component", ['@angular/core', '@angular/router', './chat.service'], function(exports_1, context_1) {
+System.register("chats.component", ['@angular/core', '@angular/router', './chat.service', './chat-detail.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register("chats.component", ['@angular/core', '@angular/router', './chat.
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, router_1, chat_service_1;
+    var core_1, router_1, chat_service_1, chat_detail_component_1;
     var ChatsComponent;
     return {
         setters:[
@@ -22,6 +22,9 @@ System.register("chats.component", ['@angular/core', '@angular/router', './chat.
             },
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
+            },
+            function (chat_detail_component_1_1) {
+                chat_detail_component_1 = chat_detail_component_1_1;
             }],
         execute: function() {
             ChatsComponent = (function () {
@@ -53,10 +56,35 @@ System.register("chats.component", ['@angular/core', '@angular/router', './chat.
                     var link = ['/detail', this.selectedChat.id];
                     this.router.navigate(link);
                 };
+                ChatsComponent.prototype.addChat = function () {
+                    this.addingChat = true;
+                    this.selectedChat = null;
+                };
+                ChatsComponent.prototype.close = function (savedChat) {
+                    this.addingChat = false;
+                    if (savedChat) {
+                        this.getChats();
+                    }
+                };
+                ChatsComponent.prototype.deleteChat = function (chat, event) {
+                    var _this = this;
+                    event.stopPropagation();
+                    this.chatService
+                        .delete(chat)
+                        .then(function (res) {
+                        _this.chats = _this.chats.filter(function (c) { return c !== chat; });
+                        if (_this.selectedChat === chat) {
+                            _this.selectedChat = null;
+                        }
+                        _this.changeDetectorRef.detectChanges();
+                    })
+                        .catch(function (error) { return _this.error = error; });
+                };
                 ChatsComponent = __decorate([
                     core_1.Component({
                         selector: 'my-chats',
-                        templateUrl: 'templates/chats.component.html'
+                        templateUrl: 'templates/chats.component.html',
+                        directives: [chat_detail_component_1.ChatDetailComponent]
                     }),
                     __param(0, core_1.Inject(chat_service_1.ChatService)),
                     __param(1, core_1.Inject(core_1.ChangeDetectorRef)),

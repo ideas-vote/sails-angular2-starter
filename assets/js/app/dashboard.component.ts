@@ -3,10 +3,12 @@ import { Router } from '@angular/router';
 
 import { Chat } from './chat';
 import { ChatService } from './chat.service';
+import { ChatSearchComponent } from 'chat-search.component';
 
 @Component({
   selector: 'my-dashboard',
   templateUrl: 'templates/dashboard.component.html',
+  directives: [ChatSearchComponent]
 })
 export class DashboardComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, Inject, ChangeDetectorRef, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Chat } from './chat';
@@ -9,7 +9,10 @@ import { ChatService } from './chat.service';
   templateUrl: 'templates/chat-detail.component.html'
 })
 export class ChatDetailComponent implements OnInit, OnDestroy {
-  chat: Chat;
+  @Input() chat: Chat;
+  @Output() close = new EventEmitter();
+  error: any;
+  navigated = false; // true if navigated here
   private changeDetectorRef: ChangeDetectorRef;
   private sub: any;
 
@@ -18,12 +21,18 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
           @Inject(ActivatedRoute) private route: ActivatedRoute) {
             this.changeDetectorRef = changeDetectorRef;
     this.sub = this.route.params.subscribe(params => {
-      let id = +params['id']; // (+) converts string 'id' to a number
-      this.chatService.getChat(id)
-        .then(chat => {
-          this.chat = chat;
-          this.changeDetectorRef.detectChanges();
-        });
+      if (params['id'] !== undefined) {
+        let id = +params['id']; // (+) converts string 'id' to a number
+        this.navigated = true;
+        this.chatService.getChat(id)
+          .then(chat => {
+            this.chat = chat;
+            this.changeDetectorRef.detectChanges();
+          });
+      } else {
+        this.navigated = false;
+        this.chat = new Chat();
+      }
     });
    }
   
@@ -37,7 +46,20 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
     }
   }
   
-  goBack() {
-    window.history.back();
+  save() {
+    this.chatService
+        .save(this.chat)
+        .then(chat => {
+          this.chat = chat; // saved chat, w/ id if new
+          this.goBack(chat);
+        })
+        .catch(error => this.error = error); // TODO: Display error message
+  }
+  
+  goBack(savedChat: Chat = null) {
+    this.close.emit(savedChat);
+    if (this.navigated) {
+      window.history.back();
+    }
   }
 }

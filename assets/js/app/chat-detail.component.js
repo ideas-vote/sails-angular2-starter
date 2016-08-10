@@ -1,4 +1,4 @@
-System.register("chat-detail.component", ['@angular/core', '@angular/router', './chat.service'], function(exports_1, context_1) {
+System.register("chat-detail.component", ['@angular/core', '@angular/router', './chat', './chat.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register("chat-detail.component", ['@angular/core', '@angular/router', '.
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, router_1, chat_service_1;
+    var core_1, router_1, chat_1, chat_service_1;
     var ChatDetailComponent;
     return {
         setters:[
@@ -19,6 +19,9 @@ System.register("chat-detail.component", ['@angular/core', '@angular/router', '.
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+            },
+            function (chat_1_1) {
+                chat_1 = chat_1_1;
             },
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
@@ -29,14 +32,23 @@ System.register("chat-detail.component", ['@angular/core', '@angular/router', '.
                     var _this = this;
                     this.chatService = chatService;
                     this.route = route;
+                    this.close = new core_1.EventEmitter();
+                    this.navigated = false; // true if navigated here
                     this.changeDetectorRef = changeDetectorRef;
                     this.sub = this.route.params.subscribe(function (params) {
-                        var id = +params['id']; // (+) converts string 'id' to a number
-                        _this.chatService.getChat(id)
-                            .then(function (chat) {
-                            _this.chat = chat;
-                            _this.changeDetectorRef.detectChanges();
-                        });
+                        if (params['id'] !== undefined) {
+                            var id = +params['id']; // (+) converts string 'id' to a number
+                            _this.navigated = true;
+                            _this.chatService.getChat(id)
+                                .then(function (chat) {
+                                _this.chat = chat;
+                                _this.changeDetectorRef.detectChanges();
+                            });
+                        }
+                        else {
+                            _this.navigated = false;
+                            _this.chat = new chat_1.Chat();
+                        }
                     });
                 }
                 ChatDetailComponent.prototype.ngOnInit = function () {
@@ -47,9 +59,29 @@ System.register("chat-detail.component", ['@angular/core', '@angular/router', '.
                         this.sub.unsubscribe();
                     }
                 };
-                ChatDetailComponent.prototype.goBack = function () {
-                    window.history.back();
+                ChatDetailComponent.prototype.save = function () {
+                    var _this = this;
+                    this.chatService
+                        .save(this.chat)
+                        .then(function (chat) {
+                        _this.chat = chat; // saved chat, w/ id if new
+                        _this.goBack(chat);
+                    })
+                        .catch(function (error) { return _this.error = error; }); // TODO: Display error message
                 };
+                ChatDetailComponent.prototype.goBack = function (savedChat) {
+                    if (savedChat === void 0) { savedChat = null; }
+                    this.close.emit(savedChat);
+                    if (this.navigated) {
+                        window.history.back();
+                    }
+                };
+                __decorate([
+                    core_1.Input()
+                ], ChatDetailComponent.prototype, "chat");
+                __decorate([
+                    core_1.Output()
+                ], ChatDetailComponent.prototype, "close");
                 ChatDetailComponent = __decorate([
                     core_1.Component({
                         selector: 'chat-detail',

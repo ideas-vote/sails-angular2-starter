@@ -2,8 +2,15 @@
 <ul>
     <li *ngFor="let chat of chats" (click)="onSelect(chat)">
         <span class="badge">{{chat.id}}</span> {{chat.name}}
+        <button class="delete-button" (click)="deleteChat(chat, $event)">Delete</button>
     </li>
 </ul>
+<div class="error" *ngIf="error">{{error}}</div>
+<button (click)="addChat()">Add New Chat</button>
+<div *ngIf="addingChat">
+  <chat-detail (close)="close($event)"></chat-detail>
+</div>
+
 <div *ngIf="selectedChat">
   <h2>
     {{selectedChat.name | uppercase}} is my chat

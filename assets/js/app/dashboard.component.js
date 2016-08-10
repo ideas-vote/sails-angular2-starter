@@ -1,4 +1,4 @@
-System.register("dashboard.component", ['@angular/core', '@angular/router', './chat.service'], function(exports_1, context_1) {
+System.register("dashboard.component", ['@angular/core', '@angular/router', './chat.service', 'chat-search.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register("dashboard.component", ['@angular/core', '@angular/router', './c
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, router_1, chat_service_1;
+    var core_1, router_1, chat_service_1, chat_search_component_1;
     var DashboardComponent;
     return {
         setters:[
@@ -22,6 +22,9 @@ System.register("dashboard.component", ['@angular/core', '@angular/router', './c
             },
             function (chat_service_1_1) {
                 chat_service_1 = chat_service_1_1;
+            },
+            function (chat_search_component_1_1) {
+                chat_search_component_1 = chat_search_component_1_1;
             }],
         execute: function() {
             DashboardComponent = (function () {
@@ -47,7 +50,8 @@ System.register("dashboard.component", ['@angular/core', '@angular/router', './c
                 DashboardComponent = __decorate([
                     core_1.Component({
                         selector: 'my-dashboard',
-                        templateUrl: 'templates/dashboard.component.html'
+                        templateUrl: 'templates/dashboard.component.html',
+                        directives: [chat_search_component_1.ChatSearchComponent]
                     }),
                     __param(0, core_1.Inject(chat_service_1.ChatService)),
                     __param(1, core_1.Inject(core_1.ChangeDetectorRef)),
